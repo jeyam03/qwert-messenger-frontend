@@ -572,6 +572,10 @@ Ensure the default browser behavior of the `hidden` attribute.
   height: 12rem;
 }
 
+.h-\[calc\(100vh-6rem\)\] {
+  height: calc(100vh - 6rem);
+}
+
 .max-h-\[38rem\] {
   max-height: 38rem;
 }
