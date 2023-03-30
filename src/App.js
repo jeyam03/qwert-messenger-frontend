@@ -16,12 +16,14 @@ import Delete from "./pages/Delete";
 import LoginSignupPage from "./pages/Login";
 import ChatWindow from "./components/ChatWindow";
 
+
 export const WalletContext = createContext();
 export const GunContext = createContext();
 
 const gun = Gun({
   peers: ["http://localhost:5050/gun"],
 });
+
 
 const App = () => {
   const [wAddress, setWAddress] = useState(

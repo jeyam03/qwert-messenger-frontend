@@ -1,14 +1,17 @@
-import React, { useReducer } from "react";
+import React, { useEffect, useReducer } from "react";
 import { FiSend } from "react-icons/fi";
 import { IoIosArrowBack } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
 
-const ChatWindow = ({ className, avatar, username, messageState = ["", (v) => { }] }) => {
+const ChatWindow = ({
+  className,
+  avatar,
+  username,
+  messageState = ["", (v) => {}],
+  sendMessage = () => {},
+  messages = [],
+}) => {
   const [messageText, setMessageText] = messageState;
-
-  const sendMessage = () => {
-    console.log("send message");
-  };
 
   const handleKeyDown = (e) => {
     if (e.key === "Enter") {
@@ -16,37 +19,16 @@ const ChatWindow = ({ className, avatar, username, messageState = ["", (v) => { 
     }
   };
 
-  // The messages array will hold the chat messages
-  const currentState = {
-    messages: [],
-  };
-
-  // This reducer function will edit the messages array
-  const reducer = (state, message) => {
-    return {
-      messages: [message, ...state.messages],
-    };
-  };
-
-  const [state, dispatch] = useReducer(reducer, currentState);
-  const newMessagesArray = () => {
-    const formattedMessages = state.messages.filter((value, index) => {
-      const _value = JSON.stringify(value);
-      return (
-        index ===
-        state.messages.findIndex((obj) => {
-          return JSON.stringify(obj) === _value;
-        })
-      );
-    });
-
-    return formattedMessages;
-  };
-
   const navigate = useNavigate();
 
+  useEffect(() => {
+    console.log("MESSAGES", messages);
+  }, [messages]);
+
   return (
-    <div className={`${className} flex flex-1 h-[calc(100vh-9rem)] lg:h-[calc(100vh-6rem)] flex-col relative`}>
+    <div
+      className={`${className} flex flex-1 h-[calc(100vh-9rem)] lg:h-[calc(100vh-6rem)] flex-col relative`}
+    >
       <header className="flex h-fit items-center justify-between p-4 relative z-30 shadow-lg w-full">
         <div className="flex items-center space-x-2">
           <button
@@ -75,11 +57,11 @@ const ChatWindow = ({ className, avatar, username, messageState = ["", (v) => { 
       </header>
       <main className="bg-gray-100 overflow-y-auto h-[calc(100vw78rem)] flex-1 w-full px-4 py-4 relative z-0">
         <section className="w-full space-y-2">
-          {newMessagesArray().map((chat) =>
-            username === chat.sender ? (
+          {messages.map((chat) =>
+            username !== chat.name ? (
               <div className="flex w-full items-center space-x-2">
-                <div className="max-w-[400px] w-fit bg-purple-600 text-white rounded-r-full rounded-tl-full px-4 py-2">
-                  {chat.content}
+                <div className="max-w-[400px] w-fit bg-gray-300 text-black rounded-r-full rounded-tl-full px-4 py-2">
+                  {chat.text}
                 </div>
                 <p className="text-sm text-gray-400">{chat.timestamp}</p>
                 <div className="flex-1"></div>
@@ -88,8 +70,8 @@ const ChatWindow = ({ className, avatar, username, messageState = ["", (v) => { 
               <div className="flex w-full items-center space-x-2">
                 <div className="flex-1"></div>
                 <p className="text-sm text-gray-400">{chat.timestamp}</p>
-                <div className="max-w-[500px] w-fit bg-gray-300 text-black rounded-l-full rounded-tr-full px-4 py-2">
-                  {chat.content}
+                <div className="max-w-[500px] w-fit  bg-purple-600 text-white rounded-l-full rounded-tr-full px-4 py-2">
+                  {chat.text}
                 </div>
               </div>
             )

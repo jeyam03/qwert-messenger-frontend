@@ -6,78 +6,35 @@ import { GunContext, WalletContext } from "../App";
 import { faker } from "@faker-js/faker";
 import ChatWindow from "../components/ChatWindow";
 import { useNavigate } from "react-router-dom";
+import { useChat } from "./useChat";
+import socketIO from "socket.io-client";
 
-// The messages array will hold the chat messages
-const currentState = {
-  messages: [],
-};
-
-// This reducer function will edit the messages array
-const reducer = (state, message) => {
-  return {
-    messages: [message, ...state.messages],
-  };
-};
+const socket = socketIO.connect("http://localhost:4600");
 
 const ChatMain = () => {
-  const { gun } = useContext(GunContext);
   const [messageText, setMessageText] = useState("");
-  const [state, dispatch] = useReducer(reducer, currentState);
 
-  const [username, setUsername] = useState(
-    `${faker.name.firstName()} ${faker.name.lastName()}`
-  );
+  const [username, setUsername] = useState(localStorage.getItem("email"));
   const [avatar, setAvatar] = useState(faker.image.avatar());
 
-  // fires immediately the page loads
-  useEffect(() => {
-    const messagesRef = gun.get("MESSAGES_REFRESH");
-
-    messagesRef.map().on((m) => {
-      console.log("messagesRef", m);
-      dispatch({
-        sender: m.sender,
-        avatar: m.avatar,
-        content: m.content,
-        timestamp: m.timestamp,
+  const handleSendMessage = (e) => {
+    e.preventDefault();
+    if (messageText.trim() && localStorage.getItem("email")) {
+      socket.emit("message", {
+        text: messageText,
+        name: localStorage.getItem("email"),
+        id: `${socket.id}${Math.random()}`,
+        socketID: socket.id,
       });
-    });
-  }, []);
-
-  // remove duplicate messages
-  const newMessagesArray = () => {
-    const formattedMessages = state.messages.filter((value, index) => {
-      const _value = JSON.stringify(value);
-      return (
-        index ===
-        state.messages.findIndex((obj) => {
-          return JSON.stringify(obj) === _value;
-        })
-      );
-    });
-
-    return formattedMessages;
-  };
-
-  // save message to gun / send message
-  const sendMessage = () => {
-    // a reference to the current room
-    const messagesRef = gun.get("MESSAGES_REFRESH");
-
-    // the message object to be sent/saved
-    const messageObject = {
-      sender: username,
-      avatar: avatar,
-      content: messageText,
-      timestamp: Date().substring(16, 21),
-    };
-
-    // this function sends/saves the message onto the network
-    messagesRef.set(messageObject);
-
-    // clear the text field after message has been sent
+    }
     setMessageText("");
   };
+
+  const [messages, setMessages] = useState([]);
+
+  useEffect(() => {
+    socket.on("messageResponse", (data) => setMessages([...messages, data]));
+  }, [socket, messages]);
 
   return (
     <section className="w-full flex flex-col">
@@ -99,6 +56,8 @@ const ChatMain = () => {
           avatar={avatar}
           messageState={[messageText, setMessageText]}
           className={"hidden lg:flex"}
+          sendMessage={handleSendMessage}
+          messages={messages}
         />
       </div>
     </section>
