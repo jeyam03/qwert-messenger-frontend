@@ -51,11 +51,11 @@ const Login = () => {
         alt="3845696"
         border="0"
         width="96"
-        className="relative origin-center scale-150 pb-12 drop-shaow-xl"
+        className="relative origin-center scale-150 pb-10 drop-shaow-xl"
       />
-      <div className="w-5/6 lg:w-[400px] max-h-[36rem] lg:max-h-fit bg-white rounded-xl p-8 shadow-lg">
-        <Heading>{isLogin ? "Login" : "Signup"}</Heading>
-        <div className="overflow-y-auto max-h-[60%] lg:max-h-fit pr-2 mt-2">
+      <div className="w-[90%] lg:w-[400px] max-h-[38rem] lg:max-h-fit bg-white rounded-xl shadow-lg">
+        <Heading className="px-6 lg:px-8 pt-8">{isLogin ? "Login" : "Signup"}</Heading>
+        <div className="overflow-y-auto max-h-[60%] lg:max-h-fit px-6 lg:px-8">
           <TextInput
             className="mt-8"
             valueState={[email, setEmail]}
@@ -98,7 +98,7 @@ const Login = () => {
             />
           }
         </div>
-        <div className="flex flex-col-reverse lg:flex-row mt-8 gap-4">
+        <div className={`flex flex-col-reverse lg:flex-row mt-4 gap-4 items-center px-12 lg:px-8 pt-4 pb-8 ${!isLogin && "border-t-2 border-purple-600 lg:border-0"}`}>
           <Button text={isLogin ? "Switch to Signup" : "Switch to Login"} handleClick={() => setIsLogin(!isLogin)} outlined className="w-full lg:w-2/3" />
           <Button text={isLogin ? "Login" : "Signup"} handleClick={handleClick} className="w-full lg:w-1/3" />
         </div>

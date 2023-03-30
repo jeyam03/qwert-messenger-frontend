@@ -14,6 +14,7 @@ import { createContext, useState } from "react";
 import Gun from "gun";
 import Delete from "./pages/Delete";
 import LoginSignupPage from "./pages/Login";
+import ChatWindow from "./components/ChatWindow";
 
 export const WalletContext = createContext();
 export const GunContext = createContext();
@@ -41,6 +42,7 @@ const App = () => {
           <Routes>
             <Route path="chat" element={<Layout />}>
               <Route index element={<ChatMain />} />
+              <Route path=":id" element={<ChatWindow />} />
               <Route path="settings" element={<Settings />} />
             </Route>
             <Route path="login" element={<LoginSignupPage />} />
