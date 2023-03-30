@@ -23,6 +23,11 @@ const Login = () => {
       return;
     }
 
+    if (!isLogin && !name && !dept) {
+      toast.error("Please enter all the details");
+      return;
+    }
+
     if (isLogin) {
       toast.success("Login Successful");
       navigate("/chat");
@@ -93,7 +98,7 @@ const Login = () => {
             />
           }
         </div>
-        <div className="flex flex-col lg:flex-row mt-8 gap-4">
+        <div className="flex flex-col-reverse lg:flex-row mt-8 gap-4">
           <Button text={isLogin ? "Switch to Signup" : "Switch to Login"} handleClick={() => setIsLogin(!isLogin)} outlined className="w-full lg:w-2/3" />
           <Button text={isLogin ? "Login" : "Signup"} handleClick={handleClick} className="w-full lg:w-1/3" />
         </div>

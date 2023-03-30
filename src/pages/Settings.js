@@ -2,8 +2,12 @@ import React, { useState } from "react";
 import Header from "../components/Header";
 import { BiCamera, BiPencil, BiShare } from "react-icons/bi";
 import { FiSend } from "react-icons/fi";
+import Button from "../components/Button";
+import { useNavigate } from "react-router-dom";
 
 const Settings = () => {
+  const navigate = useNavigate();
+
   return (
     <section className="w-full flex flex-col">
       <Header title="Dashboard" className="px-8 lg:px-12 py-8" />
@@ -24,6 +28,10 @@ const Settings = () => {
           <h1 className="text-xl font-semibold text-center">20Z222</h1>
           <h1 className="text-lg font-semibold text-center">Computer Science and Engineering</h1>
           <h1 className="text-lg font-semibold text-center">2020 - 2024</h1>
+          <Button text="Logout" className="w-1/2 lg:w-1/4 mt-4" handleClick={() => {
+            localStorage.removeItem("email");
+            navigate("/login");
+          }} />
         </div>
       </div>
     </section>
