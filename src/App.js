@@ -6,6 +6,7 @@ import {
   Routes,
 } from "react-router-dom";
 import "./styles/tailwind.output.css";
+import { Toaster } from "react-hot-toast";
 import ChatMain from "./pages/ChatMain";
 import Layout from "./pages/Layout";
 import Settings from "./pages/Settings";
@@ -36,6 +37,7 @@ const App = () => {
         value={{ walletAddress: wAddress, setWalletAddress: setWAddress }}
       >
         <BrowserRouter>
+          <Toaster />
           <Routes>
             <Route path="chat" element={<Layout />}>
               <Route index element={<ChatMain />} />

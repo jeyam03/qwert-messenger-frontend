@@ -1,56 +1,105 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
+import { toast } from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
+import Button from "../components/Button";
+import Dropdown from "../components/Dropdown";
+import Heading from "../components/Heading";
+import TextInput from "../components/TextInput";
+import departments from "../utils/Departments";
 
-function LoginSignupPage() {
+const Login = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [name, setName] = useState("");
+  const [dept, setDept] = useState("");
   const [isLogin, setIsLogin] = useState(true);
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    if (!email || !password) {
+      toast.error("Please enter email and password");
+      return;
+    }
+
     if (isLogin) {
-      // handle login logic here
+      toast.success("Login Successful");
+      navigate("/chat");
     } else {
-      // handle signup logic here
+      if (password === confirmPassword) {
+        toast.success("Signup Successful");
+        navigate("/chat");
+      } else {
+        toast.error("Passwords do not match");
+      }
     }
   };
 
-  return (
-    <div className="flex h-screen justify-center items-center">
-      <form className="bg-white p-6 rounded-lg shadow-md" onSubmit={handleSubmit}>
-        <h2 className="text-lg font-medium mb-4">{isLogin ? 'Login' : 'Signup'}</h2>
-        <div className="mb-4">
-          <label className="block text-gray-700 font-medium mb-2">Email</label>
-          <input
-            className="border border-gray-400 p-2 rounded-lg w-full"
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-        </div>
-        <div className="mb-4">
-          <label className="block text-gray-700 font-medium mb-2">Password</label>
-          <input
-            className="border border-gray-400 p-2 rounded-lg w-full"
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </div>
-        <button className="bg-indigo-500 text-white py-2 px-4 mx-2 rounded-lg hover:bg-indigo-600">
-          {isLogin ? 'Login' : 'Signup'}
-        </button>
-        <button
-          className="bg-gray-300 text-indigo-500 py-2 px-4 mx-2 rounded-lg hover:bg-gray-400"
-          onClick={() => setIsLogin(!isLogin)}
-          type="button"
-        >
-          {isLogin ? 'Switch to Signup' : 'Switch to Login'}
-        </button>
-      </form>
-    </div>
-  );
-}
+  const LOGO =
+    "https://res.cloudinary.com/msprojects5/image/upload/v1674152420/isgjx8vrd96sesvn65m3.png";
 
-export default LoginSignupPage;
+  return (
+    <main className="w-screen h-screen bg-gradient-to-t from-purple-200 flex flex-col items-center justify-center">
+      <img
+        src={LOGO}
+        alt="3845696"
+        border="0"
+        width="96"
+        className="relative origin-center scale-150 pb-12 drop-shaow-xl"
+      />
+      <div className="w-5/6 lg:w-[400px] max-h-[36rem] lg:max-h-fit bg-white rounded-xl p-8 shadow-lg">
+        <Heading>{isLogin ? "Login" : "Signup"}</Heading>
+        <div className="overflow-y-auto max-h-[60%] lg:max-h-fit pr-2 mt-2">
+          <TextInput
+            className="mt-8"
+            valueState={[email, setEmail]}
+            placeholder="Enter Email"
+            title="Email"
+          />
+          {
+            !isLogin &&
+            <div>
+              <TextInput
+                className="mt-4"
+                valueState={[name, setName]}
+                placeholder="Enter Name"
+                title="Name"
+              />
+              <Dropdown
+                className="mt-4"
+                title="Department"
+                options={departments}
+                placeholder="Select Department"
+                valueState={[dept, setDept]}
+              />
+            </div>
+          }
+          <TextInput
+            className="mt-4"
+            valueState={[password, setPassword]}
+            placeholder="Enter Password"
+            title="Password"
+            type="password"
+          />
+          {
+            !isLogin &&
+            <TextInput
+              className="mt-4"
+              valueState={[confirmPassword, setConfirmPassword]}
+              placeholder="Enter password again"
+              title="Confirm Password"
+              type="password"
+            />
+          }
+        </div>
+        <div className="flex flex-col lg:flex-row mt-8 gap-4">
+          <Button text={isLogin ? "Switch to Signup" : "Switch to Login"} handleClick={() => setIsLogin(!isLogin)} outlined className="w-full lg:w-2/3" />
+          <Button text={isLogin ? "Login" : "Signup"} handleClick={handleClick} className="w-full lg:w-1/3" />
+        </div>
+      </div>
+    </main>
+  );
+};
+
+export default Login;

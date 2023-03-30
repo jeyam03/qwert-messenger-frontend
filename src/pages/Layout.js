@@ -28,12 +28,12 @@ const Layout = () => {
           ></div>
         </div>
         <img
-        src={LOGO}
-        alt="3845696"
-        border="0"
-        width="96"
-        className="relative origin-center"
-      />
+          src={LOGO}
+          alt="3845696"
+          border="0"
+          width="96"
+          className="relative origin-center"
+        />
       </div>
     </main>
   );
