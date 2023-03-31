@@ -24,6 +24,11 @@ const Login = () => {
       return;
     }
 
+    if (!email.endsWith("@psgtech.ac.in")) {
+      toast.error("Please enter your college email address");
+      return;
+    }
+
     if (!isLogin && !name && !dept) {
       toast.error("Please enter all the details");
       return;

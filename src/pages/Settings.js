@@ -1,12 +1,31 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Header from "../components/Header";
 import { BiCamera, BiPencil, BiShare } from "react-icons/bi";
 import { FiSend } from "react-icons/fi";
 import Button from "../components/Button";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const Settings = () => {
   const navigate = useNavigate();
+  const [data, setData] = useState(null);
+
+  useEffect(() => {
+    if (!localStorage.getItem("email")) {
+      navigate("/login");
+    } else {
+      axios.get(`http://localhost:4600/api/user/${localStorage.getItem("email")}`)
+        .then((res) => {
+          console.log(res.data);
+          setData(res.data);
+        })
+        .catch((err) => {
+          console.log(err);
+        }
+        );
+    }
+  }, []);
+
 
   return (
     <section className="w-full flex flex-col">
@@ -24,9 +43,9 @@ const Settings = () => {
         </div>
 
         <div className="w-full lg:w-1/2 flex flex-col items-center justify-center gap-2">
-          <h1 className="text-2xl font-semibold text-center">Jeyam Palaniappan D</h1>
-          <h1 className="text-xl font-semibold text-center">20Z222</h1>
-          <h1 className="text-lg font-semibold text-center">Computer Science and Engineering</h1>
+          <h1 className="text-2xl font-semibold text-center">{data?.name}</h1>
+          <h1 className="text-xl font-semibold text-center">{data?.email}</h1>
+          <h1 className="text-lg font-semibold text-center">{data?.dept}</h1>
           <h1 className="text-lg font-semibold text-center">2020 - 2024</h1>
           <Button text="Logout" className="w-1/2 lg:w-1/4 mt-4" handleClick={() => {
             localStorage.removeItem("email");
