@@ -36,7 +36,7 @@ const Login = () => {
 
     if (isLogin) {
       toast.promise(
-        axios.post("http://localhost:4600/api/login", {
+        axios.post("https://kriya-convenor.psgtech.ac.in/api/login", {
           email: email,
           password: password,
         }),
@@ -61,7 +61,7 @@ const Login = () => {
     } else {
       if (password === confirmPassword) {
         toast.promise(
-          axios.post("http://localhost:4600/api/signup", {
+          axios.post("https://kriya-convenor.psgtech.ac.in/api/signup", {
             email: email,
             password: password,
             name: name,

@@ -81,7 +81,7 @@ const FileUpload = ({
             </label>
           </div>
           {fileName === "No file chosen" || !pdf ? (
-            <p className="whitespace-pre-wrap text-slate-700 w-full">{fileName}</p>
+            <p className="hidden lg:block whitespace-pre-wrap text-slate-700 w-full">{fileName}</p>
           ) : (
             <Button
               text={<p className="text-sm">{fileName}</p>}

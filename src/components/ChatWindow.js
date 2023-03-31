@@ -73,7 +73,7 @@ const ChatWindow = ({ className, avatar, username }) => {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:4600/api/chats/${id}`)
+      .get(`https://kriya-convenor.psgtech.ac.in/api/chats/${id}`)
       .then((res) => {
         console.log(res.data);
         setMessages(res.data);
@@ -85,14 +85,14 @@ const ChatWindow = ({ className, avatar, username }) => {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:4600/api/room/${id}`)
+      .get(`https://kriya-convenor.psgtech.ac.in/api/room/${id}`)
       .then((res) => {
         console.log("ROOM", res.data);
         setRoomDetails(res.data);
         res.data.type === "direct"
           ? axios
             .get(
-              `http://localhost:4600/api/user/${fetchOtherFromDirect(
+              `https://kriya-convenor.psgtech.ac.in/api/user/${fetchOtherFromDirect(
                 res.data.participants
               )}`
             )
@@ -227,11 +227,11 @@ const ChatWindow = ({ className, avatar, username }) => {
       <section className="w-full p-4 bg-gray-200 flex space-x-4 items-center">
         <FileUpload
           fileState={[photo, setPhoto]}
-          className="w-[10%]"
+          className="w-1/6 lg:w-[10%]"
           title="Upload Photo"
         />
         <input
-          className="bg-white rounded-full px-6 py-3 flex-1 italic"
+          className="bg-white rounded-full px-6 py-3 w-5/6 flex-1 italic"
           placeholder={"Type something here ..."}
           value={messageText}
           onChange={(e) => setMessageText(e.target.value)}

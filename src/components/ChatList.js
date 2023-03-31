@@ -10,7 +10,7 @@ const ChatList = ({ className }) => {
   useEffect(() => {
     axios
       .get(
-        `http://localhost:4600/api/rooms-for/${localStorage.getItem("email")}`
+        `https://kriya-convenor.psgtech.ac.in/api/rooms-for/${localStorage.getItem("email")}`
       )
       .then((res) => {
         console.log(res.data);
@@ -52,11 +52,10 @@ const ChatList = ({ className }) => {
           onClick={() => {
             let email = window.prompt("Enter Email address");
             axios
-              .post(`http://localhost:4600/api/create-room`, {
+              .post(`https://kriya-convenor.psgtech.ac.in/api/create-room`, {
                 participants: [email, localStorage.getItem("email")],
-                roomId: `room_${email.split("@")[0]}_${
-                  localStorage.getItem("email").split("@")[0]
-                }`,
+                roomId: `room_${email.split("@")[0]}_${localStorage.getItem("email").split("@")[0]
+                  }`,
               })
               .then((res) => {
                 console.log(res);

@@ -24,7 +24,7 @@ const gun = Gun({
   peers: ["http://localhost:5050/gun"],
 });
 
-const socket = socketIO.connect("http://localhost:4600");
+const socket = socketIO.connect("https://kriya-convenor.psgtech.ac.in");
 
 const App = () => {
   const [wAddress, setWAddress] = useState(
@@ -47,13 +47,13 @@ const App = () => {
         <BrowserRouter>
           <Toaster />
           <Routes>
+            <Route path="login" element={<LoginSignupPage />} />
             <Route path="chat" element={<Layout />}>
               <Route path="settings" element={<Settings />} />
               <Route path=":id" element={<ChatMain />} />
               <Route index element={<ChatPanel />} />
             </Route>
-            <Route path="login" element={<LoginSignupPage />} />
-            <Route index element={<Navigate to="chat" />} />
+            <Route index element={<Navigate to="login" />} />
           </Routes>
         </BrowserRouter>
       </WalletContext.Provider>

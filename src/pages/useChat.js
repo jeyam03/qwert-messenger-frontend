@@ -5,7 +5,7 @@ export const useChat = () => {
   const socketRef = useRef(null);
 
   useEffect(() => {
-    socketRef.current = io("http://localhost:4600");
+    socketRef.current = io("https://kriya-convenor.psgtech.ac.in");
 
     return () => {
       socketRef.current.close();

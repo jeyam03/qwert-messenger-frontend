@@ -21,7 +21,7 @@ export const fetchUploadFile = async (file) => {
   }
   let data = new FormData();
   data.append("file", file);
-  return axios.post("http://localhost:4600/api/upload", data, {
+  return axios.post("https://kriya-convenor.psgtech.ac.in/api/upload", data, {
     headers: {
       "Content-Type": "multipart/form-data",
     },

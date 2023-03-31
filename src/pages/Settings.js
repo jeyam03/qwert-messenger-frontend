@@ -14,7 +14,7 @@ const Settings = () => {
     if (!localStorage.getItem("email")) {
       navigate("/login");
     } else {
-      axios.get(`http://localhost:4600/api/user/${localStorage.getItem("email")}`)
+      axios.get(`https://kriya-convenor.psgtech.ac.in/api/user/${localStorage.getItem("email")}`)
         .then((res) => {
           console.log(res.data);
           setData(res.data);
