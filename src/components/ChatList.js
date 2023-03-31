@@ -1,34 +1,76 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { BiShare } from "react-icons/bi";
 import { FiSend } from "react-icons/fi";
+import axios from "axios";
 
 const ChatList = ({ className }) => {
+  const [list, setList] = useState([]);
+
+  useEffect(() => {
+    axios
+      .get(
+        `http://localhost:4600/api/rooms-for/${localStorage.getItem("email")}`
+      )
+      .then((res) => {
+        console.log(res.data);
+        setList(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
+
+  const fetchOtherFromDirect = (arr) => {
+    console.log("ROOM", arr);
+    const other = arr.filter((item) => item !== localStorage.getItem("email"));
+    return other[0];
+  };
+
   return (
     <div
       className={`${className} w-full lg:w-1/4 h-[calc(100vh-15rem)] lg:h-[calc(100vh-6rem)] overflow-y-auto overflow-x-auto`}
     >
-      {localStorage.getItem("email") === "20z209@psgtech.ac.in"
-        ? initialDataFor20z209.map((item) => {
-            return (
-              <ChatHandleNavItem
-                handleName={item.name}
-                ethAddress={item.email}
-                href={item.roomId}
-                type={item?.type}
-              />
-            );
-          })
-        : initialDataFor20z222.map((item) => {
-            return (
-              <ChatHandleNavItem
-                handleName={item.name}
-                ethAddress={item.email}
-                href={item.roomId}
-                type={item?.type}
-              />
-            );
-          })}
+      {list.map((l) => (
+        <ChatHandleNavItem
+          handleName={
+            l.type === "direct"
+              ? fetchOtherFromDirect(l.participants).split("@")[0]
+              : l.roomId
+          }
+          ethAddress={
+            l.type === "direct"
+              ? fetchOtherFromDirect(l.participants)
+              : "Group Chat"
+          }
+          href={l.roomId}
+          type={l.type}
+        />
+      ))}
+      <div className="p-4 w-full">
+        <button
+          onClick={() => {
+            let email = window.prompt("Enter Email address");
+            axios
+              .post(`http://localhost:4600/api/create-room`, {
+                participants: [email, localStorage.getItem("email")],
+                roomId: `room_${email.split("@")[0]}_${
+                  localStorage.getItem("email").split("@")[0]
+                }`,
+              })
+              .then((res) => {
+                console.log(res);
+                window.location.reload();
+              })
+              .catch((err) => {
+                console.log(err);
+              });
+          }}
+          className="bg-gray-200 hover:bg-gray-400 font-semibold tracking-widest px-4 py-2 rounded-lg shadow-lg w-full"
+        >
+          New Handler
+        </button>
+      </div>
     </div>
   );
 };
