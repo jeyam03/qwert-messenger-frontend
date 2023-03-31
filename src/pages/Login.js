@@ -1,3 +1,4 @@
+import axios from "axios";
 import React, { useState } from "react";
 import { toast } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
@@ -29,12 +30,56 @@ const Login = () => {
     }
 
     if (isLogin) {
-      toast.success("Login Successful");
-      navigate("/chat");
+      toast.promise(
+        axios.post("http://localhost:4600/api/login", {
+          email: email,
+          password: password,
+        }),
+        {
+          loading: "Logging In",
+          success: () => {
+            navigate("/chat");
+            localStorage.setItem("email", email);
+            return "Login Successful";
+          },
+          error: (err) => {
+            console.log(err);
+            return `Error: ${err.message}`
+          }
+        },
+        {
+          style: {
+            minWidth: "200px",
+          },
+        }
+      );
     } else {
       if (password === confirmPassword) {
-        toast.success("Signup Successful");
-        navigate("/chat");
+        toast.promise(
+          axios.post("http://localhost:4600/api/signup", {
+            email: email,
+            password: password,
+            name: name,
+            dept: dept,
+          }),
+          {
+            loading: "Signing Up",
+            success: () => {
+              navigate("/chat");
+              localStorage.setItem("email", email);
+              return "Signup Successful";
+            },
+            error: (err) => {
+              console.log(err);
+              return `Error: ${err.message}`
+            }
+          },
+          {
+            style: {
+              minWidth: "200px",
+            },
+          }
+        );
       } else {
         toast.error("Passwords do not match");
       }
