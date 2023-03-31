@@ -8,34 +8,44 @@ const ChatList = ({ className }) => {
     <div
       className={`${className} w-full lg:w-1/4 h-[calc(100vh-15rem)] lg:h-[calc(100vh-6rem)] overflow-y-auto overflow-x-auto`}
     >
-      {initialData.map((item) => {
-        return (
-          <ChatHandleNavItem
-            handleImage={item.handleImage}
-            handleName={item.handleName}
-            ethAddress={item.ethAddress}
-          />
-        );
-      })}
+      {localStorage.getItem("email") === "20z209@psgtech.ac.in"
+        ? initialDataFor20z209.map((item) => {
+            return (
+              <ChatHandleNavItem
+                handleName={item.name}
+                ethAddress={item.email}
+                href={item.roomId}
+              />
+            );
+          })
+        : initialDataFor20z222.map((item) => {
+            return (
+              <ChatHandleNavItem
+                handleName={item.name}
+                ethAddress={item.email}
+                href={item.roomId}
+              />
+            );
+          })}
     </div>
   );
 };
 
 export default ChatList;
 
-const ChatHandleNavItem = ({ ethAddress, handleName, handleImage }) => {
+const ChatHandleNavItem = ({ ethAddress, handleName, href }) => {
   const navigate = useNavigate();
 
   return (
     <button
       className="group z-30 relative flex w-full items-center transition-all hover:bg-gray-200 justify-center p-4 space-x-2"
       onClick={() => {
-        navigate(`/chat/id`);
+        navigate(`/chat/${href}`);
       }}
     >
       <div
         style={{
-          background: `url(${handleImage})`,
+          background: `url(https://cdn-icons-png.flaticon.com/512/3135/3135715.png)`,
           backgroundPosition: "center",
           backgroundSize: "cover",
         }}
@@ -43,7 +53,7 @@ const ChatHandleNavItem = ({ ethAddress, handleName, handleImage }) => {
       />
       <div className="flex-1">
         <p className="text-lg font-semibold text-left">{handleName}</p>
-        <p className="text-gray-400 w-[30ch] overflow-x-hidden text-ellipsis">
+        <p className="text-gray-400 w-[30ch] text-left overflow-x-hidden text-ellipsis">
           {ethAddress}
         </p>
       </div>
@@ -54,55 +64,38 @@ const ChatHandleNavItem = ({ ethAddress, handleName, handleImage }) => {
   );
 };
 
-const initialData = [
+const initialDataFor20z222 = [
   {
-    handleName: "Abra Pobjay",
-    handleImage: "http://dummyimage.com/223x100.png/dddddd/000000",
-    ethAddress: "0xb4be687f70319b847590fd6a4d9d853fd5b1e8ac",
+    name: "Ashwin Kumar",
+    email: "20z209@psgtech.ac.in",
+    roomId: "room_20z209_20z222",
   },
   {
-    handleName: "Davita Ketcher",
-    handleImage: "http://dummyimage.com/125x100.png/5fa2dd/ffffff",
-    ethAddress: "0xd158a00258f0ba237670ef814dfa0aa634d09e40",
+    name: "Aditya Varma",
+    email: "20z205@psgtech.ac.in",
+    roomId: "room_20z205_20z222",
   },
   {
-    handleName: "Lem Macci",
-    handleImage: "http://dummyimage.com/101x100.png/ff4444/ffffff",
-    ethAddress: "0xfc4db0a4004bd3f535469aaefa22fe6357e08795",
+    name: "Pranav P",
+    email: "20z237@psgtech.ac.in",
+    roomId: "room_20z237_20z222",
+  },
+];
+
+const initialDataFor20z209 = [
+  {
+    name: "Jeyam Palaniappan",
+    email: "20z222@psgtech.ac.in",
+    roomId: "room_20z209_20z222",
   },
   {
-    handleName: "Drugi Doche",
-    handleImage: "http://dummyimage.com/136x100.png/cc0000/ffffff",
-    ethAddress: "0x1be9d3fbb9d7318bfcf1a083b0af6c28d78f280e",
+    name: "Aditya Varma",
+    email: "20z205@psgtech.ac.in",
+    roomId: "room_20z205_20z209",
   },
   {
-    handleName: "Jamie Bausor",
-    handleImage: "http://dummyimage.com/163x100.png/5fa2dd/ffffff",
-    ethAddress: "0x3b2d9706c0bf465f1cb336a765024379b9dd2e26",
-  },
-  {
-    handleName: "Adelheid Linsley",
-    handleImage: "http://dummyimage.com/122x100.png/ff4444/ffffff",
-    ethAddress: "0xa9960e964d9ea1c05f287dcf35280d30b3b71cbe",
-  },
-  {
-    handleName: "Berkly Camois",
-    handleImage: "http://dummyimage.com/102x100.png/dddddd/000000",
-    ethAddress: "0xdef2d63c60bf0637ab2f7e30109beb53790d3d60",
-  },
-  {
-    handleName: "Ave Lithgow",
-    handleImage: "http://dummyimage.com/221x100.png/5fa2dd/ffffff",
-    ethAddress: "0x3fdbf1b9477140d93dd61653ee4575c94a56661f",
-  },
-  {
-    handleName: "Farah Sorbey",
-    handleImage: "http://dummyimage.com/104x100.png/ff4444/ffffff",
-    ethAddress: "0x94247f934cbd6ea503c080a0b7f62cd317373772",
-  },
-  {
-    handleName: "Leupold Kingsly",
-    handleImage: "http://dummyimage.com/138x100.png/ff4444/ffffff",
-    ethAddress: "0x02dd9584a46f8e2877165f6183b5a50d226c14a3",
+    name: "Pranav P",
+    email: "20z237@psgtech.ac.in",
+    roomId: "room_20z237_20z209",
   },
 ];

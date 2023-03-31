@@ -10,7 +10,7 @@ import { Toaster } from "react-hot-toast";
 import ChatMain from "./pages/ChatMain";
 import Layout from "./pages/Layout";
 import Settings from "./pages/Settings";
-import { createContext, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 import Gun from "gun";
 import LoginSignupPage from "./pages/Login";
 import ChatWindow from "./components/ChatWindow";
@@ -34,6 +34,10 @@ const App = () => {
   const gun = Gun({
     peers: ["http://localhost:5000/gun"],
   });
+
+  useEffect(() => {
+    socket.emit("join-rooms", { email: localStorage.getItem("email") });
+  }, []);
 
   return (
     <SocketContext.Provider value={{ socket }}>

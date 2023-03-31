@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useReducer, useState } from "react";
 import { FiSend } from "react-icons/fi";
 import { IoIosArrowBack } from "react-icons/io";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import socketIO from "socket.io-client";
 import axios from "axios";
 import { SocketContext } from "../App";
@@ -10,6 +10,8 @@ const ChatWindow = ({ className, avatar, username }) => {
   const { socket } = useContext(SocketContext);
 
   const [messageText, setMessageText] = useState("");
+
+  const { id } = useParams();
 
   const navigate = useNavigate();
 
@@ -21,12 +23,14 @@ const ChatWindow = ({ className, avatar, username }) => {
         name: localStorage.getItem("email"),
         id: `${socket.id}${Math.random()}`,
         socketID: socket.id,
+        room: id,
       });
     }
     setMessageText("");
   };
 
   const [messages, setMessages] = useState([]);
+  const [roomDetails, setRoomDetails] = useState(null);
 
   useEffect(() => {
     socket.on("messageResponse", (data) => setMessages([...messages, data]));
@@ -34,7 +38,7 @@ const ChatWindow = ({ className, avatar, username }) => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:4600/api/chats/test_room")
+      .get(`http://localhost:4600/api/chats/${id}`)
       .then((res) => {
         console.log(res.data);
         setMessages(res.data);
@@ -42,7 +46,25 @@ const ChatWindow = ({ className, avatar, username }) => {
       .catch((err) => {
         console.log(err);
       });
-  }, []);
+  }, [id]);
+
+  useEffect(() => {
+    axios
+      .get(`http://localhost:4600/api/room/${id}`)
+      .then((res) => {
+        console.log("ROOM", res.data);
+        setRoomDetails(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, [id]);
+
+  const fetchOtherFromDirect = (arr) => {
+    console.log("ROOM", arr);
+    const other = arr.filter((item) => item !== localStorage.getItem("email"));
+    return other[0];
+  };
 
   return (
     <div
@@ -67,7 +89,13 @@ const ChatWindow = ({ className, avatar, username }) => {
             className="rounded-full aspect-square w-12 group-hover:scale-125 transition-all"
           />
           <div className="space-y-2 ">
-            <h1 className="text-2xl font-semibold">{username || "John Doe"}</h1>
+            <h1 className="text-2xl font-semibold">
+              {roomDetails
+                ? roomDetails.type === "direct"
+                  ? fetchOtherFromDirect(roomDetails.participants)
+                  : roomDetails.roomId
+                : "Loading..."}
+            </h1>
             <h2 className="text-gray-400 text-sm">
               0xb4be687f70319b847590fd6a4d9d853fd5b1e8ac
             </h2>
