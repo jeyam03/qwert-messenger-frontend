@@ -15,6 +15,7 @@ const ChatList = ({ className }) => {
                 handleName={item.name}
                 ethAddress={item.email}
                 href={item.roomId}
+                type={item?.type}
               />
             );
           })
@@ -24,6 +25,7 @@ const ChatList = ({ className }) => {
                 handleName={item.name}
                 ethAddress={item.email}
                 href={item.roomId}
+                type={item?.type}
               />
             );
           })}
@@ -33,7 +35,12 @@ const ChatList = ({ className }) => {
 
 export default ChatList;
 
-const ChatHandleNavItem = ({ ethAddress, handleName, href }) => {
+const ChatHandleNavItem = ({
+  ethAddress,
+  handleName,
+  href,
+  type = "direct",
+}) => {
   const navigate = useNavigate();
 
   return (
@@ -45,7 +52,10 @@ const ChatHandleNavItem = ({ ethAddress, handleName, href }) => {
     >
       <div
         style={{
-          background: `url(https://cdn-icons-png.flaticon.com/512/3135/3135715.png)`,
+          background:
+            type === "direct"
+              ? `url(https://cdn-icons-png.flaticon.com/512/3135/3135715.png)`
+              : `url(https://cdn-icons-png.flaticon.com/512/74/74577.png)`,
           backgroundPosition: "center",
           backgroundSize: "cover",
         }}
@@ -68,17 +78,26 @@ const initialDataFor20z222 = [
   {
     name: "Ashwin Kumar",
     email: "20z209@psgtech.ac.in",
+    type: "direct",
     roomId: "room_20z209_20z222",
   },
   {
     name: "Aditya Varma",
     email: "20z205@psgtech.ac.in",
+    type: "direct",
     roomId: "room_20z205_20z222",
   },
   {
     name: "Pranav P",
     email: "20z237@psgtech.ac.in",
+    type: "direct",
     roomId: "room_20z237_20z222",
+  },
+  {
+    name: "ADL Dev group",
+    email: "",
+    type: "group",
+    roomId: "ADL_DEV",
   },
 ];
 
@@ -86,16 +105,25 @@ const initialDataFor20z209 = [
   {
     name: "Jeyam Palaniappan",
     email: "20z222@psgtech.ac.in",
+    type: "direct",
     roomId: "room_20z209_20z222",
   },
   {
     name: "Aditya Varma",
     email: "20z205@psgtech.ac.in",
+    type: "direct",
     roomId: "room_20z205_20z209",
   },
   {
     name: "Pranav P",
     email: "20z237@psgtech.ac.in",
+    type: "direct",
     roomId: "room_20z237_20z209",
+  },
+  {
+    name: "ADL Dev group",
+    email: "",
+    type: "group",
+    roomId: "ADL_DEV",
   },
 ];

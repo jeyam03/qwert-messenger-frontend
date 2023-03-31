@@ -56,20 +56,21 @@ const ChatWindow = ({ className, avatar, username }) => {
       .then((res) => {
         console.log("ROOM", res.data);
         setRoomDetails(res.data);
-        res.data.type === "direct" &&
-          axios
-            .get(
-              `http://localhost:4600/api/user/${fetchOtherFromDirect(
-                res.data.participants
-              )}`
-            )
-            .then((res) => {
-              console.log("USER", res.data);
-              setOtherDetails(res.data);
-            })
-            .catch((err) => {
-              console.log(err);
-            });
+        res.data.type === "direct"
+          ? axios
+              .get(
+                `http://localhost:4600/api/user/${fetchOtherFromDirect(
+                  res.data.participants
+                )}`
+              )
+              .then((res) => {
+                console.log("USER", res.data);
+                setOtherDetails(res.data);
+              })
+              .catch((err) => {
+                console.log(err);
+              })
+          : setOtherDetails({});
       })
       .catch((err) => {
         console.log(err);
@@ -113,7 +114,11 @@ const ChatWindow = ({ className, avatar, username }) => {
                 : "Loading..."}
             </h1>
             <h2 className="text-gray-400 text-sm">
-              {otherDetails?.email || "Loading..."}
+              {roomDetails
+                ? roomDetails.type === "direct"
+                  ? otherDetails?.email || "Loading..."
+                  : "Group Chat"
+                : "Loading..."}
             </h2>
           </div>
         </div>
