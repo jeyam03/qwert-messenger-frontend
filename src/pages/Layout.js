@@ -6,7 +6,7 @@ import { Outlet, useNavigate } from "react-router";
 
 const Layout = () => {
   const [profileImage, setProfileImage] = useState(
-    "https://images.unsplash.com/photo-1618641986557-1ecd230959aa?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80"
+    "https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
   );
   const LOGO =
     "https://res.cloudinary.com/msprojects5/image/upload/v1674152420/isgjx8vrd96sesvn65m3.png";

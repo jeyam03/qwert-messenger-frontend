@@ -8,7 +8,7 @@ import ChatList from "../components/ChatList";
 
 const ChatMain = () => {
   const [username, setUsername] = useState(localStorage.getItem("email"));
-  const [avatar, setAvatar] = useState(faker.image.avatar());
+  const [avatar, setAvatar] = useState("https://cdn-icons-png.flaticon.com/512/3135/3135715.png");
 
   return (
     <section className="w-full flex flex-col">
