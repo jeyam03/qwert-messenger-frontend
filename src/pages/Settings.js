@@ -34,7 +34,7 @@ const Settings = () => {
         <div
           className="rounded-full h-48 w-48 shadow-lg shadow-purple-500 relative"
           style={{
-            background: `url(https://images.unsplash.com/photo-1618641986557-1ecd230959aa?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80)`,
+            background: `url(https://cdn-icons-png.flaticon.com/512/3135/3135715.png)`,
             backgroundPosition: "center",
             backgroundSize: "cover",
           }}
