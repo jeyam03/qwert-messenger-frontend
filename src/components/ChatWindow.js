@@ -31,6 +31,7 @@ const ChatWindow = ({ className, avatar, username }) => {
 
   const [messages, setMessages] = useState([]);
   const [roomDetails, setRoomDetails] = useState(null);
+  const [otherDetails, setOtherDetails] = useState(null);
 
   useEffect(() => {
     socket.on("messageResponse", (data) => setMessages([...messages, data]));
@@ -54,6 +55,20 @@ const ChatWindow = ({ className, avatar, username }) => {
       .then((res) => {
         console.log("ROOM", res.data);
         setRoomDetails(res.data);
+        res.data.type === "direct" &&
+          axios
+            .get(
+              `http://localhost:4600/api/user/${fetchOtherFromDirect(
+                res.data.participants
+              )}`
+            )
+            .then((res) => {
+              console.log("USER", res.data);
+              setOtherDetails(res.data);
+            })
+            .catch((err) => {
+              console.log(err);
+            });
       })
       .catch((err) => {
         console.log(err);
@@ -90,14 +105,14 @@ const ChatWindow = ({ className, avatar, username }) => {
           />
           <div className="space-y-2 ">
             <h1 className="text-2xl font-semibold">
-              {roomDetails
+              {roomDetails && otherDetails
                 ? roomDetails.type === "direct"
-                  ? fetchOtherFromDirect(roomDetails.participants)
+                  ? otherDetails?.name
                   : roomDetails.roomId
                 : "Loading..."}
             </h1>
             <h2 className="text-gray-400 text-sm">
-              0xb4be687f70319b847590fd6a4d9d853fd5b1e8ac
+              {otherDetails?.email || "Loading..."}
             </h2>
           </div>
         </div>
