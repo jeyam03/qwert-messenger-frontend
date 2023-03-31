@@ -47,8 +47,8 @@ const App = () => {
         <BrowserRouter>
           <Toaster />
           <Routes>
-            <Route path="settings" element={<Settings />} />
             <Route path="chat" element={<Layout />}>
+              <Route path="settings" element={<Settings />} />
               <Route path=":id" element={<ChatMain />} />
               <Route index element={<ChatPanel />} />
             </Route>
