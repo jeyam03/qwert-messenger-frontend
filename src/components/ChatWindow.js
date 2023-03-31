@@ -24,6 +24,7 @@ const ChatWindow = ({ className, avatar, username }) => {
         id: `${socket.id}${Math.random()}`,
         socketID: socket.id,
         room: id,
+        timeStamp: new Date(),
       });
     }
     setMessageText("");
@@ -121,19 +122,33 @@ const ChatWindow = ({ className, avatar, username }) => {
         <section className="w-full space-y-2">
           {messages.map((chat) =>
             username !== chat.name ? (
-              <div className="flex w-full items-center space-x-2">
-                <div className="max-w-[400px] w-fit bg-gray-300 text-black rounded-r-full rounded-tl-full px-4 py-2">
-                  {chat.text}
+              <div className="">
+                <p className="text-xs text-gray-400 mb-1 pl-4 hover:text-gray-600">
+                  {chat.name.split("@")[0]}
+                </p>
+                <div className="flex w-full items-center space-x-2">
+                  <div className="max-w-[400px] w-fit bg-gray-300 text-black rounded-r-full rounded-tl-full px-4 py-2">
+                    {chat.text}
+                  </div>
+                  <p className="text-sm text-gray-400">
+                    {new Date(chat.timeStamp).toLocaleString()}
+                  </p>
+                  <div className="flex-1"></div>
                 </div>
-                <p className="text-sm text-gray-400">{chat.timestamp}</p>
-                <div className="flex-1"></div>
               </div>
             ) : (
-              <div className="flex w-full items-center space-x-2">
-                <div className="flex-1"></div>
-                <p className="text-sm text-gray-400">{chat.timestamp}</p>
-                <div className="max-w-[500px] w-fit  bg-purple-600 text-white rounded-l-full rounded-tr-full px-4 py-2">
-                  {chat.text}
+              <div className="">
+                <p className="text-xs text-right text-gray-400 mb-1 pr-4 hover:text-gray-600">
+                  {chat.name.split("@")[0]}
+                </p>
+                <div className="flex w-full items-center space-x-2">
+                  <div className="flex-1"></div>
+                  <p className="text-sm text-gray-400">
+                    {new Date(chat.timeStamp).toLocaleString()}
+                  </p>
+                  <div className="max-w-[500px] w-fit  bg-purple-600 text-white rounded-l-full rounded-tr-full px-4 py-2">
+                    {chat.text}
+                  </div>
                 </div>
               </div>
             )
