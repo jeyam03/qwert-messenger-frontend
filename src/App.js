@@ -12,18 +12,19 @@ import Layout from "./pages/Layout";
 import Settings from "./pages/Settings";
 import { createContext, useState } from "react";
 import Gun from "gun";
-import Delete from "./pages/Delete";
 import LoginSignupPage from "./pages/Login";
 import ChatWindow from "./components/ChatWindow";
-
+import ChatPanel from "./pages/ChatPanel";
+import socketIO from "socket.io-client";
 
 export const WalletContext = createContext();
-export const GunContext = createContext();
+export const SocketContext = createContext();
 
 const gun = Gun({
   peers: ["http://localhost:5050/gun"],
 });
 
+const socket = socketIO.connect("http://localhost:4600");
 
 const App = () => {
   const [wAddress, setWAddress] = useState(
@@ -35,25 +36,24 @@ const App = () => {
   });
 
   return (
-    <GunContext.Provider value={{ gun }}>
+    <SocketContext.Provider value={{ socket }}>
       <WalletContext.Provider
         value={{ walletAddress: wAddress, setWalletAddress: setWAddress }}
       >
         <BrowserRouter>
           <Toaster />
           <Routes>
+            <Route path="settings" element={<Settings />} />
             <Route path="chat" element={<Layout />}>
-              <Route index element={<ChatMain />} />
-              <Route path=":id" element={<ChatWindow />} />
-              <Route path="settings" element={<Settings />} />
+              <Route path=":id" element={<ChatMain />} />
+              <Route index element={<ChatPanel />} />
             </Route>
             <Route path="login" element={<LoginSignupPage />} />
-            <Route path="delete" element={<Delete />} />
             <Route index element={<Navigate to="chat" />} />
           </Routes>
         </BrowserRouter>
       </WalletContext.Provider>
-    </GunContext.Provider>
+    </SocketContext.Provider>
   );
 };
 

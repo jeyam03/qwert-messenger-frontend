@@ -1,33 +1,52 @@
-import React, { useEffect, useReducer } from "react";
+import React, { useContext, useEffect, useReducer, useState } from "react";
 import { FiSend } from "react-icons/fi";
 import { IoIosArrowBack } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
+import socketIO from "socket.io-client";
+import axios from "axios";
+import { SocketContext } from "../App";
 
-const ChatWindow = ({
-  className,
-  avatar,
-  username,
-  messageState = ["", (v) => {}],
-  sendMessage = () => {},
-  messages = [],
-}) => {
-  const [messageText, setMessageText] = messageState;
+const ChatWindow = ({ className, avatar, username }) => {
+  const { socket } = useContext(SocketContext);
 
-  const handleKeyDown = (e) => {
-    if (e.key === "Enter") {
-      sendMessage();
-    }
-  };
+  const [messageText, setMessageText] = useState("");
 
   const navigate = useNavigate();
 
+  const sendMessage = (e) => {
+    e.preventDefault();
+    if (messageText.trim() && localStorage.getItem("email")) {
+      socket.emit("message", {
+        text: messageText,
+        name: localStorage.getItem("email"),
+        id: `${socket.id}${Math.random()}`,
+        socketID: socket.id,
+      });
+    }
+    setMessageText("");
+  };
+
+  const [messages, setMessages] = useState([]);
+
   useEffect(() => {
-    console.log("MESSAGES", messages);
-  }, [messages]);
+    socket.on("messageResponse", (data) => setMessages([...messages, data]));
+  }, [socket, messages]);
+
+  useEffect(() => {
+    axios
+      .get("http://localhost:4600/api/chats/test_room")
+      .then((res) => {
+        console.log(res.data);
+        setMessages(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
 
   return (
     <div
-      className={`${className} flex flex-1 h-[calc(100vh-9rem)] lg:h-[calc(100vh-6rem)] flex-col relative`}
+      className={`${className} w-full overflow-x-hidden flex flex-1 h-[calc(100vh-9rem)] lg:h-[calc(100vh-6rem)] flex-col relative`}
     >
       <header className="flex h-fit items-center justify-between p-4 relative z-30 shadow-lg w-full">
         <div className="flex items-center space-x-2">
