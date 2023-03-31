@@ -5,29 +5,62 @@ import { useNavigate, useParams } from "react-router-dom";
 import socketIO from "socket.io-client";
 import axios from "axios";
 import { SocketContext } from "../App";
+import FileUpload from "./FileUpload";
+import { fetchUploadFile } from "../API/calls";
+import { toast } from "react-hot-toast";
+import ModalImage from "react-modal-image";
 
 const ChatWindow = ({ className, avatar, username }) => {
   const { socket } = useContext(SocketContext);
 
   const [messageText, setMessageText] = useState("");
+  const [photo, setPhoto] = useState(null);
+  const [photoUrl, setPhotoUrl] = useState("");
 
   const { id } = useParams();
 
   const navigate = useNavigate();
 
-  const sendMessage = (e) => {
+  const sendMessage = async (e) => {
     e.preventDefault();
-    if (messageText.trim() && localStorage.getItem("email")) {
-      socket.emit("message", {
-        text: messageText,
-        name: localStorage.getItem("email"),
-        id: `${socket.id}${Math.random()}`,
-        socketID: socket.id,
-        room: id,
-        timeStamp: new Date(),
+
+    if (photo !== null) {
+      let formData = new FormData();
+      formData.append("file", photo);
+      await toast.promise(axios.post(`https://bogsdb.psgtech.ac.in/api/upload/`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        }
+      }), {
+        loading: "Uploading...",
+        success: (res) => {
+          setPhotoUrl(res.data.url);
+          console.log(res.data.url);
+          socket.emit("message", {
+            text: res.data.url,
+            name: localStorage.getItem("email"),
+            id: `${socket.id}${Math.random()}`,
+            socketID: socket.id,
+            room: id,
+            timeStamp: new Date(),
+          });
+          return "Uploaded";
+        },
+        error: "Error uploading file",
       });
+    } else {
+      if (messageText.trim() && localStorage.getItem("email")) {
+        socket.emit("message", {
+          text: messageText,
+          name: localStorage.getItem("email"),
+          id: `${socket.id}${Math.random()}`,
+          socketID: socket.id,
+          room: id,
+          timeStamp: new Date(),
+        });
+      }
+      setMessageText("");
     }
-    setMessageText("");
   };
 
   const [messages, setMessages] = useState([]);
@@ -58,18 +91,18 @@ const ChatWindow = ({ className, avatar, username }) => {
         setRoomDetails(res.data);
         res.data.type === "direct"
           ? axios
-              .get(
-                `http://localhost:4600/api/user/${fetchOtherFromDirect(
-                  res.data.participants
-                )}`
-              )
-              .then((res) => {
-                console.log("USER", res.data);
-                setOtherDetails(res.data);
-              })
-              .catch((err) => {
-                console.log(err);
-              })
+            .get(
+              `http://localhost:4600/api/user/${fetchOtherFromDirect(
+                res.data.participants
+              )}`
+            )
+            .then((res) => {
+              console.log("USER", res.data);
+              setOtherDetails(res.data);
+            })
+            .catch((err) => {
+              console.log(err);
+            })
           : setOtherDetails({});
       })
       .catch((err) => {
@@ -105,7 +138,7 @@ const ChatWindow = ({ className, avatar, username }) => {
             }}
             className="rounded-full aspect-square w-12 group-hover:scale-125 transition-all"
           />
-          <div className="space-y-2 ">
+          <div className="space-y-1 ">
             <h1 className="text-2xl font-semibold">
               {roomDetails && otherDetails
                 ? roomDetails.type === "direct"
@@ -113,6 +146,17 @@ const ChatWindow = ({ className, avatar, username }) => {
                   : roomDetails.roomId
                 : "Loading..."}
             </h1>
+            {
+              roomDetails?.type === "group" && (
+                <h2 className="text-gray-400 text-sm">
+                  {
+                    roomDetails?.participants?.map((item) => {
+                      return item.split("@")[0] + ", ";
+                    })
+                  }
+                </h2>
+              )
+            }
             <h2 className="text-gray-400 text-sm">
               {roomDetails
                 ? roomDetails.type === "direct"
@@ -133,7 +177,17 @@ const ChatWindow = ({ className, avatar, username }) => {
                 </p>
                 <div className="flex w-full items-center space-x-2">
                   <div className="max-w-[400px] w-fit bg-gray-300 text-black rounded-r-full rounded-tl-full px-4 py-2">
-                    {chat.text}
+                    {
+
+                      /^https?:\/\/(?:[a-z0-9-]+\.)+[a-z]{2,6}(?:\/[^/#?]+)+\.(?:jpg|gif|png)$/.test(
+                        chat.text
+                      ) ?
+                        (
+                          <a href={chat.text} target="_blank">
+                            <img alt='img_path' className="w-20 h-20 rounded-full" src={chat.text} />
+                          </a>
+                        ) : chat.text
+                    }
                   </div>
                   <p className="text-sm text-gray-400">
                     {new Date(chat.timeStamp).toLocaleString()}
@@ -152,7 +206,17 @@ const ChatWindow = ({ className, avatar, username }) => {
                     {new Date(chat.timeStamp).toLocaleString()}
                   </p>
                   <div className="max-w-[500px] w-fit  bg-purple-600 text-white rounded-l-full rounded-tr-full px-4 py-2">
-                    {chat.text}
+                    {
+
+                      /^https?:\/\/(?:[a-z0-9-]+\.)+[a-z]{2,6}(?:\/[^/#?]+)+\.(?:jpg|gif|png)$/.test(
+                        chat.text
+                      ) ?
+                        (
+                          <a href={chat.text} target="_blank">
+                            <img alt='img_path' className="w-20 h-20 rounded-full" src={chat.text} />
+                          </a>
+                        ) : chat.text
+                    }
                   </div>
                 </div>
               </div>
@@ -161,6 +225,11 @@ const ChatWindow = ({ className, avatar, username }) => {
         </section>
       </main>
       <section className="w-full p-4 bg-gray-200 flex space-x-4 items-center">
+        <FileUpload
+          fileState={[photo, setPhoto]}
+          className="w-[10%]"
+          title="Upload Photo"
+        />
         <input
           className="bg-white rounded-full px-6 py-3 flex-1 italic"
           placeholder={"Type something here ..."}
